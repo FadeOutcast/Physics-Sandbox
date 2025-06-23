@@ -10,7 +10,9 @@
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "YES",
-                "CMAKE_PREFIX_PATH": "E:/C++_Enivronment/MinGW/mingw64"
+                "CMAKE_PREFIX_PATH": "E:/C++_Enivronment/MinGW/mingw64",
+                "CMAKE_C_COMPILER": "E:/C++_Enivronment/MinGW/ucrt64/bin/gcc.exe",
+                "CMAKE_CXX_COMPILER": "E:/C++_Enivronment/MinGW/ucrt64/bin/g++.exe"
             }
         }
     ]
