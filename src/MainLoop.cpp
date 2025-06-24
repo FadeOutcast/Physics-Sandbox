@@ -38,14 +38,14 @@ void MainLoop::HandleEvents()
         break;
         
     case SDL_EVENT_KEY_DOWN:
-        if (Event.key.key == SDLK_T)
-        {
-            if (ShapeCount < 100) {
-                Shape* NewShape = new Shape();
-                Shapes[ShapeCount] = NewShape;
-                ShapeCount++;
-            }
-        }
+        // if (Event.key.key == SDLK_T)
+        // {
+        //     if (ShapeCount < 100) {
+        //         Shape* NewShape = new Shape();
+        //         Shapes[ShapeCount] = NewShape;
+        //         ShapeCount++;
+        //     }
+        // }
         break;
 
     case SDL_EVENT_MOUSE_BUTTON_DOWN:
@@ -54,11 +54,12 @@ void MainLoop::HandleEvents()
                 float X;
                 float Y;
                 SDL_GetMouseState(&X, &Y);
-                Shape* NewShape = new Shape(X, Y, 50.f, 50.f);
+                Shape* NewShape = new Shape(Renderer, X, Y, 25.f);
                 Shapes[ShapeCount] = NewShape;
                 ShapeCount++;
             }
         }
+        break;
 
     default:
         break;
@@ -80,12 +81,11 @@ void MainLoop::PhysicsUpdate(float DeltaTime)
 
 void MainLoop::UpdateRendering()
 {
-    SDL_SetRenderDrawColor(Renderer, 255, 255, 255, 255);
+    SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 0);
     SDL_RenderClear(Renderer);
     for (int i = 0; i < ShapeCount; i++)
     {
-        SDL_SetRenderDrawColor( Renderer, Shapes[i]->Color.r, Shapes[i]->Color.g, Shapes[i]->Color.b, Shapes[i]->Color.a );
-        SDL_RenderFillRect(Renderer, &Shapes[i]->Rect);
+        Shapes[i]->Render(Renderer);
     }
     
     SDL_RenderPresent(Renderer);
