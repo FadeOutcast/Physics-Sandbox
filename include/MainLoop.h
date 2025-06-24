@@ -9,11 +9,14 @@ public:
     MainLoop();
     ~MainLoop();
 
+    static float GravityZ;
+
     void Init(const char* WindowName, int Width, int Height, SDL_WindowFlags Flag);
 
     void HandleEvents();
     void Update();
     void UpdateRendering();
+    void PhysicsUpdate(float DeltaTime);
     void Clean();
 
     bool IsRunning(){ return bIsRunning; }

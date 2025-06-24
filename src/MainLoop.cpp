@@ -1,8 +1,11 @@
 #include <MainLoop.h>
 
+float MainLoop::GravityZ = -0.1f;
+
 MainLoop::MainLoop()
 {
     ShapeCount = 0;
+    // float MainLoop::GravityZ = -9.8f;
 }
 
 MainLoop::~MainLoop()
@@ -19,7 +22,7 @@ void MainLoop::Init(const char* WindowName, int Width, int Height, SDL_WindowFla
         bIsRunning = true;
     }
     else{
-        printf("NOT STARTING WINDOW");        
+        printf("FAILED TO START WINDOW");        
         bIsRunning = false;
     }
 }
@@ -45,6 +48,18 @@ void MainLoop::HandleEvents()
         }
         break;
 
+    case SDL_EVENT_MOUSE_BUTTON_DOWN:
+        if (Event.button.button == SDL_BUTTON_LEFT){
+            if (ShapeCount < 100) {
+                float X;
+                float Y;
+                SDL_GetMouseState(&X, &Y);
+                Shape* NewShape = new Shape(X, Y, 50.f, 50.f);
+                Shapes[ShapeCount] = NewShape;
+                ShapeCount++;
+            }
+        }
+
     default:
         break;
     }
@@ -52,6 +67,15 @@ void MainLoop::HandleEvents()
 
 void MainLoop::Update()
 {
+}
+
+void MainLoop::PhysicsUpdate(float DeltaTime)
+{
+    for (int i = 0; i < ShapeCount; i++)
+    {
+        Shapes[i]->PhysicsUpdate(DeltaTime);
+    }
+    
 }
 
 void MainLoop::UpdateRendering()
