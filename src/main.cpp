@@ -9,18 +9,20 @@ int main(){
     const int TargetPhysicsDeltaTime = 1000/50;
 
     int FrameTime;
-    int PhysicsTime;
+    float PhysicsTime;
     Uint32 CurrentTime;
 
     // Used to track for frametime
-    Uint32 PreviousTime;
+    Uint32 PreviousTime = 0;
     // Used to track for physics deltatime
-    Uint32 PreviousPhysicsTime;
+    Uint32 PreviousPhysicsTime = 0;
 
     MainLoop* Loop = new MainLoop();
 
-    Loop->Init("Empty Window", 800, 700, SDL_WINDOW_RESIZABLE);
+    Loop->Init("Physics Sandbox", 800, 700, SDL_WINDOW_RESIZABLE);
     
+    // SDL_Delay(1000);
+
     while (Loop->IsRunning())
     {
         CurrentTime = SDL_GetTicks();

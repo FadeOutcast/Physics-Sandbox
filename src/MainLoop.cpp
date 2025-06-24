@@ -1,6 +1,6 @@
 #include <MainLoop.h>
 
-float MainLoop::GravityZ = -0.1f;
+float MainLoop::GravityZ = 9.8f;
 
 MainLoop::MainLoop()
 {
@@ -14,7 +14,7 @@ MainLoop::~MainLoop()
 
 void MainLoop::Init(const char* WindowName, int Width, int Height, SDL_WindowFlags Flag)
 {
-    if (SDL_Init(SDL_INIT_VIDEO) == true )
+    if (SDL_Init(SDL_INIT_VIDEO) == 1 )
     {
         printf("STARTING WINDOW");        
         Window = SDL_CreateWindow(WindowName, Width, Height, Flag);

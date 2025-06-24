@@ -13,4 +13,7 @@ public:
     void PhysicsUpdate(float DeltaTime);
     void ApplyGravity(float DeltaTime);
     void CollisionDetection();
+
+private:
+    float PreviousY;
 };

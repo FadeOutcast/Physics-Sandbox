@@ -25,10 +25,11 @@ void Shape::PhysicsUpdate(float DeltaTime)
 
 void Shape::ApplyGravity(float DeltaTime)
 {
-    float PreviousY = Rect.y;
+    if( PreviousY ==  0.f ) PreviousY = Rect.y;
 
-    float NewY = PreviousY * 2 - PreviousY * MainLoop::GravityZ * DeltaTime * DeltaTime;
+    float NewY = Rect.y * 2 - PreviousY + MainLoop::GravityZ * DeltaTime * DeltaTime;
 
+    PreviousY = Rect.y;
     Rect.y = NewY;
 
 }

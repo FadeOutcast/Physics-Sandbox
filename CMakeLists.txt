@@ -8,7 +8,13 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 # we define MY_SOURCES to be a list of all the source files for my project
 file(GLOB_RECURSE MY_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 
-add_executable(PhysicsSandbox "${MY_SOURCES}")
+# add_executable(PhysicsSandbox "${MY_SOURCES}")
+
+add_executable(PhysicsSandbox 
+                src/main.cpp
+                src/MainLoop.cpp
+                src/Shape.cpp)
+
 
 set_property(TARGET PhysicsSandbox PROPERTY CXX_STANDARD 17)
 
