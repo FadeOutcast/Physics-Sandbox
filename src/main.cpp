@@ -21,8 +21,6 @@ int main(){
 
     Loop->Init("Physics Sandbox", 800, 700, SDL_WINDOW_RESIZABLE);
     
-    // SDL_Delay(1000);
-
     while (Loop->IsRunning())
     {
         CurrentTime = SDL_GetTicks();
@@ -39,6 +37,7 @@ int main(){
 
         if ( PhysicsTime >= TargetPhysicsDeltaTime ){
             // Do Something
+            std::cout << PhysicsTime << std::endl;
             Loop->PhysicsUpdate(PhysicsTime/1000);
             PreviousPhysicsTime = CurrentTime;
         }        

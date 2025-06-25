@@ -45,8 +45,8 @@ void MainLoop::HandleEvents()
     case SDL_EVENT_KEY_DOWN:
         if (Event.key.key == SDLK_R)
         {
-            if (ShapeCount < 100) {
-                Shape* NewShape = new Shape(Renderer, SDL_rand(MainLoop::WindowWidth), SDL_rand(MainLoop::WindowHeight), 15.f);
+            if (ShapeCount < 1000) {
+                Shape* NewShape = new Shape(Renderer, SDL_rand(MainLoop::WindowWidth), SDL_rand(MainLoop::WindowHeight), 5.f);
                 Shapes[ShapeCount] = NewShape;
                 ShapeCount++;
             }
@@ -55,11 +55,11 @@ void MainLoop::HandleEvents()
 
     case SDL_EVENT_MOUSE_BUTTON_DOWN:
         if (Event.button.button == SDL_BUTTON_LEFT){
-            if (ShapeCount < 100) {
+            if (ShapeCount < 1000) {
                 float X;
                 float Y;
                 SDL_GetMouseState(&X, &Y);
-                Shape* NewShape = new Shape(Renderer, X, Y, 15.f);
+                Shape* NewShape = new Shape(Renderer, X, Y, 5.f);
                 Shapes[ShapeCount] = NewShape;
                 ShapeCount++;
             }
@@ -174,12 +174,4 @@ void MainLoop::Clean()
     SDL_DestroyRenderer(Renderer);
     SDL_Quit();
 }
-
-bool MainLoop::CheckCircleCollisions(float X1, float Y1, float X2, float Y2, float Radius1, float Radius2)
-{
-    float DistanceSquared = (X1+X2)*(X1+X2) + (Y1+Y2)*(Y1+Y2);
-
-    return DistanceSquared < (Radius1+Radius2)*(Radius1+Radius2);
-}
-
 

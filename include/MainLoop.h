@@ -29,9 +29,8 @@ private:
     SDL_Renderer* Renderer;
     bool bIsRunning;
 
-    Shape* Shapes[100];
+    Shape* Shapes[1000];
     int ShapeCount;
-    bool CheckCircleCollisions( float X1, float Y1, float X2, float Y2,float Radius1, float Radius2 );
 
     
     
