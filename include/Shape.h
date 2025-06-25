@@ -13,13 +13,15 @@ public:
     Shape(SDL_Renderer* Renderer, float X, float Y, float Width, float Height);
     Shape(SDL_Renderer* Renderer, float X, float Y, float Radius);
     ~Shape();
+    void PhysicsUpdate(float DeltaTime);
+    void ApplyGravity(float DeltaTime);
+    void WallCollision();
+    void Render(SDL_Renderer* Renderer);
+
     SDL_Color Color;
     SDL_FRect Rect;
     EShapeType ShapeType;
-    void PhysicsUpdate(float DeltaTime);
-    void ApplyGravity(float DeltaTime);
-    void CollisionDetection();
-    void Render(SDL_Renderer* Renderer);
+    std::pair<float, float> Velocity;
 
 private:
     float PreviousY;

@@ -10,6 +10,8 @@ public:
     ~MainLoop();
 
     static float GravityZ;
+    static int WindowWidth;
+    static int WindowHeight;
 
     void Init(const char* WindowName, int Width, int Height, SDL_WindowFlags Flag);
 
@@ -17,6 +19,7 @@ public:
     void Update();
     void UpdateRendering();
     void PhysicsUpdate(float DeltaTime);
+    void CollisionsUpdate(float DeltaTime);
     void Clean();
 
     bool IsRunning(){ return bIsRunning; }
@@ -28,6 +31,8 @@ private:
 
     Shape* Shapes[100];
     int ShapeCount;
+    bool CheckCircleCollisions( float X1, float Y1, float X2, float Y2,float Radius1, float Radius2 );
+
     
     
 
