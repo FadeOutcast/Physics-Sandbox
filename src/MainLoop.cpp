@@ -1,4 +1,9 @@
 #include <MainLoop.h>
+#include <imgui/imgui.h>
+#include <imgui/imgui_impl_sdl3.h>
+#include <imgui/imgui_impl_sdlrenderer3.h>
+#include <ControlsUI.h>
+
 
 float MainLoop::GravityZ = 9.8f;
 int MainLoop::WindowHeight = 0.f;
@@ -21,10 +26,30 @@ void MainLoop::Init(const char* WindowName, int Width, int Height, SDL_WindowFla
     {
         printf("STARTING WINDOW");        
         Window = SDL_CreateWindow(WindowName, Width, Height, Flag);
+        if( !Window ){
+            SDL_Quit();
+            return;
+        }
         Renderer = SDL_CreateRenderer(Window, NULL);
+        if( !Renderer ){
+            SDL_Quit();
+            return;
+        }
+
         bIsRunning = true;
         MainLoop::WindowHeight = Height;
         MainLoop::WindowWidth = Width;
+
+        // init IMGUI
+        IMGUI_CHECKVERSION();
+        ImGui::CreateContext();
+        ImGuiIO &IO = ImGui::GetIO(); (void)IO;
+
+        ImGui_ImplSDL3_InitForSDLRenderer(Window, Renderer);
+        ImGui_ImplSDLRenderer3_Init(Renderer);
+
+        Control = new ControlsUI();
+
     }
     else{
         printf("FAILED TO START WINDOW");        
@@ -69,10 +94,23 @@ void MainLoop::HandleEvents()
     default:
         break;
     }
+    ImGui_ImplSDL3_ProcessEvent(&Event);
 }
 
 void MainLoop::Update()
 {
+    int SpawnRate = 3;
+    
+    for(int i = 0; i < SpawnRate; i++){
+        
+        if (ShapeCount < 1000) {
+            Shape* NewShape = new Shape(Renderer, SDL_rand(MainLoop::WindowWidth), 0, 5.f);
+            Shapes[ShapeCount] = NewShape;
+            ShapeCount++;
+        }
+
+    }
+        
 }
 
 void MainLoop::PhysicsUpdate(float DeltaTime)
@@ -158,18 +196,24 @@ void MainLoop::CollisionsUpdate(float DeltaTime)
 
 void MainLoop::UpdateRendering()
 {
+    Control->Render();
+    ImGui::End();
+    ImGui::Render();
     SDL_SetRenderDrawColor(Renderer, 5, 5, 5, 255);
     SDL_RenderClear(Renderer);
     for (int i = 0; i < ShapeCount; i++)
     {
         Shapes[i]->Render(Renderer);
     }
-    
+    ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), Renderer);
     SDL_RenderPresent(Renderer);
 }
 
 void MainLoop::Clean()
 {
+    ImGui_ImplSDLRenderer3_Shutdown();
+    ImGui_ImplSDL3_Shutdown();
+    ImGui::DestroyContext();
     SDL_DestroyWindow(Window);
     SDL_DestroyRenderer(Renderer);
     SDL_Quit();

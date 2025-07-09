@@ -19,7 +19,7 @@ int main(){
 
     MainLoop* Loop = new MainLoop();
 
-    Loop->Init("Physics Sandbox", 800, 700, SDL_WINDOW_RESIZABLE);
+    Loop->Init("Physics Sandbox", 1920, 1080, SDL_WINDOW_RESIZABLE);
     
     while (Loop->IsRunning())
     {

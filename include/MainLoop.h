@@ -1,8 +1,11 @@
+#pragma once
+
 #include <iostream>
 #include <SDL3/SDL.h>
 #include "Shape.h"
 
 // class Shape;
+class ControlsUI;
 
 class MainLoop{
 public:
@@ -32,7 +35,7 @@ private:
     Shape* Shapes[1000];
     int ShapeCount;
 
-    
+    ControlsUI* Control;
     
 
 
