@@ -12,16 +12,15 @@
 
 Shape::Shape(SDL_Renderer* Renderer, float X, float Y, float Width, float Height)
 {
-    SDL_Color Colors[4] = { {255, 99, 71, 255},    // Tomato
-                            {135, 206, 250, 255},  // Light Sky Blue
-                            {255, 215, 0, 255},    // Gold
-                            {124, 252, 0, 255},    // Lawn Green
+    SDL_Color Colors[4] = { {255, 99, 71, 255},    // Red
+                            {135, 206, 250, 255},  // Blue
+                            {255, 215, 0, 255},    // Yellow
+                            {124, 252, 0, 255},    // Green
     };
     int RandInt = SDL_rand(4);
     RandInt = std::max(RandInt, 0);
     RandInt = std::min(RandInt, 4);
     Color = Colors[RandInt];
-    // { static_cast<Uint8>(SDL_rand(255)), static_cast<Uint8>(SDL_rand(255)),static_cast<Uint8>(SDL_rand(255)), 255 };
     Rect = {X-Width/2, Y-Height/2, Width, Height};
     ShapeType = EShapeType::Rectangle;
     PreviousY = 0.f;
@@ -31,20 +30,21 @@ Shape::Shape(SDL_Renderer* Renderer, float X, float Y, float Width, float Height
 
 Shape::Shape(SDL_Renderer* Renderer, float X, float Y, float Radius)
 {
-    SDL_Color Colors[4] = { {255, 99, 71, 255},    // Tomato
-                            {135, 206, 250, 255},  // Light Sky Blue
-                            {255, 215, 0, 255},    // Gold
-                            {124, 252, 0, 255},    // Lawn Green
+    SDL_Color Colors[4] = { {255, 99, 71, 255},    // Red
+                            {135, 206, 250, 255},  // Blue
+                            {255, 215, 0, 255},    // Yellow
+                            {124, 252, 0, 255},    // Green
     };
     int RandInt = SDL_rand(4);
     RandInt = std::max(RandInt, 0);
     RandInt = std::min(RandInt, 4);
     Color = Colors[RandInt];
-    // Color = { static_cast<Uint8>(SDL_rand(255)), static_cast<Uint8>(SDL_rand(255)),static_cast<Uint8>(SDL_rand(255)), 255 };
     Rect = {X-Radius, Y-Radius, Radius*2, Radius*2};
     ShapeType = EShapeType::Circle;
     PreviousY = 0.f;
-    Velocity = std::make_pair(0.f, 0.f);
+    Velocity = std::make_pair(SDL_rand(50.f), SDL_rand(50.f));
+    Velocity.first *= -1.f + 2.f * (SDL_rand(3) > 1.f);
+    Velocity.second *= -1.f + 2.f* (SDL_rand(3) > 1.f);
     CirlceTex = SDL_CreateTexture(Renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, Radius*2, Radius*2);
 }
 
@@ -60,6 +60,7 @@ void Shape::PhysicsUpdate(float DeltaTime)
     WallCollision();
     ApplyGravity(DeltaTime);
     Rect.x += Velocity.first * DeltaTime;
+    // Rect.y += Velocity.second * DeltaTime;
 }
 
 void Shape::ApplyGravity(float DeltaTime)

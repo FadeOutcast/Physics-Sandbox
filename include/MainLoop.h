@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <SDL3/SDL.h>
+#include <vector>
 #include "Shape.h"
 
 // class Shape;
@@ -23,7 +24,7 @@ public:
     void UpdateRendering();
     void PhysicsUpdate(float DeltaTime);
     void CollisionsUpdate(float DeltaTime);
-    void Clean();
+    void Clean(std::vector<float> &Velocities);
 
     bool IsRunning(){ return bIsRunning; }
 

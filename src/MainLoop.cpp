@@ -3,6 +3,7 @@
 #include <imgui/imgui_impl_sdl3.h>
 #include <imgui/imgui_impl_sdlrenderer3.h>
 #include <ControlsUI.h>
+#include <cmath>
 
 
 float MainLoop::GravityZ = 9.8f;
@@ -104,7 +105,7 @@ void MainLoop::Update()
     for(int i = 0; i < SpawnRate; i++){
         
         if (ShapeCount < 1000) {
-            Shape* NewShape = new Shape(Renderer, SDL_rand(MainLoop::WindowWidth), 0, 5.f);
+            Shape* NewShape = new Shape(Renderer, SDL_rand(MainLoop::WindowWidth), SDL_rand(MainLoop::WindowHeight), 5.f);
             Shapes[ShapeCount] = NewShape;
             ShapeCount++;
         }
@@ -209,7 +210,7 @@ void MainLoop::UpdateRendering()
     SDL_RenderPresent(Renderer);
 }
 
-void MainLoop::Clean()
+void MainLoop::Clean(std::vector<float> &Velocities)
 {
     ImGui_ImplSDLRenderer3_Shutdown();
     ImGui_ImplSDL3_Shutdown();
@@ -217,5 +218,11 @@ void MainLoop::Clean()
     SDL_DestroyWindow(Window);
     SDL_DestroyRenderer(Renderer);
     SDL_Quit();
+    Velocities.reserve(ShapeCount);
+
+    for( int i = 0; i < ShapeCount; i++){
+        float Velocity = sqrt( (Shapes[i]->Velocity.first * Shapes[i]->Velocity.first) + (Shapes[i]->Velocity.second * Shapes[i]->Velocity.second));
+        Velocities.push_back(Velocity);
+    }
 }
 

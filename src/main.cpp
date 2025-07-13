@@ -1,5 +1,9 @@
 #include <iostream>
 #include <MainLoop.h>
+#include <matplotlib-cpp-master/matplotlibcpp.h>
+
+namespace plt = matplotlibcpp;
+
 
 int main(){
 
@@ -16,6 +20,7 @@ int main(){
     Uint32 PreviousTime = 0;
     // Used to track for physics deltatime
     Uint32 PreviousPhysicsTime = 0;
+    
 
     MainLoop* Loop = new MainLoop();
 
@@ -43,9 +48,16 @@ int main(){
         }        
     }
 
-    Loop->Clean();
-    
+    const int NumberOfBars = 20;
 
+
+    std::vector<float> Velocities;
+    Loop->Clean(Velocities);
+
+
+    plt::hist(Velocities, NumberOfBars);
+    plt::xlim(0.f, 2500.f);
+    plt::show();
 
     return 0;
 }
