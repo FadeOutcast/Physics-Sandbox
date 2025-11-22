@@ -12,7 +12,16 @@ void ControlsUI::Render(){
     ImGui_ImplSDLRenderer3_NewFrame();
     ImGui_ImplSDL3_NewFrame();
     ImGui::NewFrame();
-    ImGui::Begin("Test");
-    ImGui::Text("Hello World!");
+    ImGui::Begin("Configuration");
+    ImGui::SliderFloat("Number of molecules",&ShapeCount, 100.f, 5000.f);
+    // ImGui::SliderInt("Number of molecules",&ShapeCount, 100, 5000);
+    ImGui::Checkbox("Gravity", &Gravity);
+    if( ImGui::Button("Save and Reset") && Loop){
+        Loop->Reset(ShapeCount, Gravity);
+    }
+    if( ImGui::Button("Plot all") && Loop){
+        Loop->Reset(ShapeCount, Gravity);
+        Loop->Clean();
+    }
 }
     

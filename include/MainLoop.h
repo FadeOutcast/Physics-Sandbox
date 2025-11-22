@@ -24,7 +24,9 @@ public:
     void UpdateRendering();
     void PhysicsUpdate(float DeltaTime);
     void CollisionsUpdate(float DeltaTime);
-    void Clean(std::vector<float> &Velocities);
+    void Clean();
+    void Reset(int ShapeCount, bool Gravity);
+    void PlotDist();
 
     bool IsRunning(){ return bIsRunning; }
 
@@ -33,8 +35,9 @@ private:
     SDL_Renderer* Renderer;
     bool bIsRunning;
 
-    Shape* Shapes[1000];
-    int ShapeCount;
+    Shape* Shapes[5000];
+    int CurrentShapeCount;
+    int MaxShapeCount = 1000;
 
     ControlsUI* Control;
     

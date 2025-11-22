@@ -4,6 +4,7 @@
 #include <imgui/imgui_impl_sdlrenderer3.h>
 #include <ControlsUI.h>
 #include <cmath>
+#include <matplotlib-cpp-master/matplotlibcpp.h>
 
 
 float MainLoop::GravityZ = 9.8f;
@@ -13,7 +14,7 @@ int MainLoop::WindowWidth = 0.f;
 
 MainLoop::MainLoop()
 {
-    ShapeCount = 0;
+    CurrentShapeCount = 0;
     // float MainLoop::GravityZ = -9.8f;
 }
 
@@ -50,6 +51,7 @@ void MainLoop::Init(const char* WindowName, int Width, int Height, SDL_WindowFla
         ImGui_ImplSDLRenderer3_Init(Renderer);
 
         Control = new ControlsUI();
+        Control->Loop = this;
 
     }
     else{
@@ -71,23 +73,23 @@ void MainLoop::HandleEvents()
     case SDL_EVENT_KEY_DOWN:
         if (Event.key.key == SDLK_R)
         {
-            if (ShapeCount < 1000) {
+            if (CurrentShapeCount < 1000) {
                 Shape* NewShape = new Shape(Renderer, SDL_rand(MainLoop::WindowWidth), SDL_rand(MainLoop::WindowHeight), 5.f);
-                Shapes[ShapeCount] = NewShape;
-                ShapeCount++;
+                Shapes[CurrentShapeCount] = NewShape;
+                CurrentShapeCount++;
             }
         }
         break;
 
     case SDL_EVENT_MOUSE_BUTTON_DOWN:
         if (Event.button.button == SDL_BUTTON_LEFT){
-            if (ShapeCount < 1000) {
+            if (CurrentShapeCount < 1000) {
                 float X;
                 float Y;
                 SDL_GetMouseState(&X, &Y);
                 Shape* NewShape = new Shape(Renderer, X, Y, 5.f);
-                Shapes[ShapeCount] = NewShape;
-                ShapeCount++;
+                Shapes[CurrentShapeCount] = NewShape;
+                CurrentShapeCount++;
             }
         }
         break;
@@ -98,16 +100,17 @@ void MainLoop::HandleEvents()
     ImGui_ImplSDL3_ProcessEvent(&Event);
 }
 
+
 void MainLoop::Update()
 {
     int SpawnRate = 3;
     
     for(int i = 0; i < SpawnRate; i++){
         
-        if (ShapeCount < 1000) {
+        if (CurrentShapeCount < MaxShapeCount) {
             Shape* NewShape = new Shape(Renderer, SDL_rand(MainLoop::WindowWidth), SDL_rand(MainLoop::WindowHeight), 5.f);
-            Shapes[ShapeCount] = NewShape;
-            ShapeCount++;
+            Shapes[CurrentShapeCount] = NewShape;
+            CurrentShapeCount++;
         }
 
     }
@@ -118,9 +121,9 @@ void MainLoop::PhysicsUpdate(float DeltaTime)
 {
     CollisionsUpdate(DeltaTime);
 
-    for (int i = 0; i < ShapeCount; i++)
+    for (int i = 0; i < CurrentShapeCount; i++)
     {
-        Shapes[i]->PhysicsUpdate(DeltaTime);
+        if(Shapes[i]) {Shapes[i]->PhysicsUpdate(DeltaTime);}
     }
 
 
@@ -128,9 +131,9 @@ void MainLoop::PhysicsUpdate(float DeltaTime)
 
 void MainLoop::CollisionsUpdate(float DeltaTime)
 {
-    for( int i = 0; i < ShapeCount; i++){
+    for( int i = 0; i < CurrentShapeCount; i++){
 
-        for( int j = i+1; j < ShapeCount; j++ ){
+        for( int j = i+1; j < CurrentShapeCount; j++ ){
             if( i == j || !Shapes[i] || !Shapes[j]) continue;
             
             if (Shapes[i]->ShapeType == EShapeType::Circle && Shapes[j]->ShapeType == EShapeType::Circle)
@@ -202,15 +205,15 @@ void MainLoop::UpdateRendering()
     ImGui::Render();
     SDL_SetRenderDrawColor(Renderer, 5, 5, 5, 255);
     SDL_RenderClear(Renderer);
-    for (int i = 0; i < ShapeCount; i++)
+    for (int i = 0; i < CurrentShapeCount; i++)
     {
-        Shapes[i]->Render(Renderer);
+        if(Shapes[i]) {Shapes[i]->Render(Renderer);}
     }
     ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), Renderer);
     SDL_RenderPresent(Renderer);
 }
 
-void MainLoop::Clean(std::vector<float> &Velocities)
+void MainLoop::Clean()
 {
     ImGui_ImplSDLRenderer3_Shutdown();
     ImGui_ImplSDL3_Shutdown();
@@ -218,11 +221,51 @@ void MainLoop::Clean(std::vector<float> &Velocities)
     SDL_DestroyWindow(Window);
     SDL_DestroyRenderer(Renderer);
     SDL_Quit();
-    Velocities.reserve(ShapeCount);
+    matplotlibcpp::show();
 
-    for( int i = 0; i < ShapeCount; i++){
+}
+
+void MainLoop::Reset(int ShapeCount, bool Gravity)
+{
+
+    PlotDist();
+    // Done to freeze calls on shapes while deleting
+    MaxShapeCount = 0;
+    CurrentShapeCount = 0;
+    for( int i = 0; i < CurrentShapeCount; i++ ){
+        if( Shapes[i] ){
+            delete Shapes[i];
+            Shapes[i] = nullptr;
+        }
+    }
+    CurrentShapeCount = 0;
+    MaxShapeCount = ShapeCount;
+    if( Gravity ){
+        GravityZ = 9.8;
+    }
+    else{
+        GravityZ = 0.f;
+    }
+
+}
+
+void MainLoop::PlotDist()
+{
+
+    
+    const int NumberOfBars = 20;
+
+
+    std::vector<float> Velocities;
+    Velocities.reserve(CurrentShapeCount);
+
+    for( int i = 0; i < CurrentShapeCount; i++){
         float Velocity = sqrt( (Shapes[i]->Velocity.first * Shapes[i]->Velocity.first) + (Shapes[i]->Velocity.second * Shapes[i]->Velocity.second));
         Velocities.push_back(Velocity);
     }
-}
 
+    matplotlibcpp::hist(Velocities, NumberOfBars);
+    matplotlibcpp::xlim(0.f, 2500.f);
+    // matplotlibcpp::show();
+
+}

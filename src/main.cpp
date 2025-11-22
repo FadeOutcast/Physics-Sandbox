@@ -1,8 +1,6 @@
 #include <iostream>
 #include <MainLoop.h>
-#include <matplotlib-cpp-master/matplotlibcpp.h>
 
-namespace plt = matplotlibcpp;
 
 
 int main(){
@@ -42,22 +40,22 @@ int main(){
 
         if ( PhysicsTime >= TargetPhysicsDeltaTime ){
             // Do Something
-            std::cout << PhysicsTime << std::endl;
+            // std::cout << PhysicsTime << std::endl;
             Loop->PhysicsUpdate(PhysicsTime/1000);
             PreviousPhysicsTime = CurrentTime;
         }        
     }
 
-    const int NumberOfBars = 20;
+    // const int NumberOfBars = 20;
 
 
-    std::vector<float> Velocities;
-    Loop->Clean(Velocities);
+    // std::vector<float> Velocities;
+    // Loop->Clean(Velocities);
 
 
-    plt::hist(Velocities, NumberOfBars);
-    plt::xlim(0.f, 2500.f);
-    plt::show();
+    // plt::hist(Velocities, NumberOfBars);
+    // plt::xlim(0.f, 2500.f);
+    // plt::show();
 
     return 0;
 }

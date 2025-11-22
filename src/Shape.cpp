@@ -72,7 +72,7 @@ void Shape::ApplyGravity(float DeltaTime)
     // Rect.y = NewY;
 
     Rect.y += Velocity.second * DeltaTime + 0.5 * MainLoop::GravityZ * DeltaTime * DeltaTime;
-    Velocity.second += MainLoop::GravityZ * DeltaTime;
+    Velocity.second = Velocity.second + MainLoop::GravityZ * DeltaTime;
 
 }
 
