@@ -14,6 +14,7 @@ public:
     ~MainLoop();
 
     static float GravityZ;
+    static int RelativeTemperature;
     static int WindowWidth;
     static int WindowHeight;
 
@@ -25,7 +26,7 @@ public:
     void PhysicsUpdate(float DeltaTime);
     void CollisionsUpdate(float DeltaTime);
     void Clean();
-    void Reset(int ShapeCount, bool Gravity);
+    void Reset(int ShapeCount, int NewRelativeTemperature, bool Gravity);
     void PlotDist();
 
     bool IsRunning(){ return bIsRunning; }
@@ -39,6 +40,8 @@ private:
     int CurrentShapeCount;
     int MaxShapeCount = 1000;
 
+    // Velocity at Temperature of 1
+    float ReferenceVelocity = 30.f;
     ControlsUI* Control;
     
 

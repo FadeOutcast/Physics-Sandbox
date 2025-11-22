@@ -10,8 +10,10 @@ enum EShapeType{
 
 class Shape{
 public:
-    Shape(SDL_Renderer* Renderer, float X, float Y, float Width, float Height);
-    Shape(SDL_Renderer* Renderer, float X, float Y, float Radius);
+    [[deprecated]]
+    Shape(float X, float Y, float Width, float Height, SDL_Renderer* Renderer);
+    
+    Shape(SDL_Renderer* Renderer, float X, float Y, float Radius, float SpawnVelocity);
     ~Shape();
     void PhysicsUpdate(float DeltaTime);
     void ApplyGravity(float DeltaTime);

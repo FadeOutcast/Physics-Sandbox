@@ -9,8 +9,8 @@
 //     CirlceTex = nullptr;
 
 // }
-
-Shape::Shape(SDL_Renderer* Renderer, float X, float Y, float Width, float Height)
+// Rectangle Spawn, deprecated
+Shape::Shape(float X, float Y, float Width, float Height, SDL_Renderer* Renderer)
 {
     SDL_Color Colors[4] = { {255, 99, 71, 255},    // Red
                             {135, 206, 250, 255},  // Blue
@@ -28,7 +28,7 @@ Shape::Shape(SDL_Renderer* Renderer, float X, float Y, float Width, float Height
     CirlceTex = nullptr;
 }
 
-Shape::Shape(SDL_Renderer* Renderer, float X, float Y, float Radius)
+Shape::Shape(SDL_Renderer* Renderer, float X, float Y, float Radius, float SpawnVelocity)
 {
     SDL_Color Colors[4] = { {255, 99, 71, 255},    // Red
                             {135, 206, 250, 255},  // Blue
@@ -42,7 +42,12 @@ Shape::Shape(SDL_Renderer* Renderer, float X, float Y, float Radius)
     Rect = {X-Radius, Y-Radius, Radius*2, Radius*2};
     ShapeType = EShapeType::Circle;
     PreviousY = 0.f;
-    Velocity = std::make_pair(SDL_rand(50.f), SDL_rand(50.f));
+    float SpeedX = SDL_rand(SpawnVelocity);
+    float SpeedY = SDL_rand(SpawnVelocity);//SDL_sqrtf(SpawnVelocity*SpawnVelocity - SpeedX*SpeedX);
+    std::cout << SpawnVelocity << std::endl;
+    Velocity = std::make_pair(SpeedX, SpeedY);
+
+    // Randomly negate x or y velocities
     Velocity.first *= -1.f + 2.f * (SDL_rand(3) > 1.f);
     Velocity.second *= -1.f + 2.f* (SDL_rand(3) > 1.f);
     CirlceTex = SDL_CreateTexture(Renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, Radius*2, Radius*2);

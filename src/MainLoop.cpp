@@ -8,9 +8,11 @@
 
 
 float MainLoop::GravityZ = 9.8f;
+int MainLoop::RelativeTemperature = 1;
 int MainLoop::WindowHeight = 0.f;
 int MainLoop::WindowWidth = 0.f;
-
+const float BoltzConst = 1.380649 * SDL_powf(10, -23);
+const float MassConst = 1.6735575 * SDL_powf(10, -27);
 
 MainLoop::MainLoop()
 {
@@ -70,29 +72,31 @@ void MainLoop::HandleEvents()
         bIsRunning = false;
         break;
         
-    case SDL_EVENT_KEY_DOWN:
-        if (Event.key.key == SDLK_R)
-        {
-            if (CurrentShapeCount < 1000) {
-                Shape* NewShape = new Shape(Renderer, SDL_rand(MainLoop::WindowWidth), SDL_rand(MainLoop::WindowHeight), 5.f);
-                Shapes[CurrentShapeCount] = NewShape;
-                CurrentShapeCount++;
-            }
-        }
-        break;
 
-    case SDL_EVENT_MOUSE_BUTTON_DOWN:
-        if (Event.button.button == SDL_BUTTON_LEFT){
-            if (CurrentShapeCount < 1000) {
-                float X;
-                float Y;
-                SDL_GetMouseState(&X, &Y);
-                Shape* NewShape = new Shape(Renderer, X, Y, 5.f);
-                Shapes[CurrentShapeCount] = NewShape;
-                CurrentShapeCount++;
-            }
-        }
-        break;
+    // Spawning Controls, deprecated
+    // case SDL_EVENT_KEY_DOWN:
+    //     if (Event.key.key == SDLK_R)
+    //     {
+    //         if (CurrentShapeCount < 1000) {
+    //             Shape* NewShape = new Shape(Renderer, SDL_rand(MainLoop::WindowWidth), SDL_rand(MainLoop::WindowHeight), 5.f);
+    //             Shapes[CurrentShapeCount] = NewShape;
+    //             CurrentShapeCount++;
+    //         }
+    //     }
+    //     break;
+
+    // case SDL_EVENT_MOUSE_BUTTON_DOWN:
+    //     if (Event.button.button == SDL_BUTTON_LEFT){
+    //         if (CurrentShapeCount < 1000) {
+    //             float X;
+    //             float Y;
+    //             SDL_GetMouseState(&X, &Y);
+    //             Shape* NewShape = new Shape(Renderer, X, Y, 5.f);
+    //             Shapes[CurrentShapeCount] = NewShape;
+    //             CurrentShapeCount++;
+    //         }
+    //     }
+    //     break;
 
     default:
         break;
@@ -103,12 +107,12 @@ void MainLoop::HandleEvents()
 
 void MainLoop::Update()
 {
-    int SpawnRate = 3;
+    int SpawnRate = 50;
     
     for(int i = 0; i < SpawnRate; i++){
         
         if (CurrentShapeCount < MaxShapeCount) {
-            Shape* NewShape = new Shape(Renderer, SDL_rand(MainLoop::WindowWidth), SDL_rand(MainLoop::WindowHeight), 5.f);
+            Shape* NewShape = new Shape(Renderer, SDL_rand(MainLoop::WindowWidth), SDL_rand(MainLoop::WindowHeight), 5.f, SDL_sqrtf(RelativeTemperature)*ReferenceVelocity);
             Shapes[CurrentShapeCount] = NewShape;
             CurrentShapeCount++;
         }
@@ -225,7 +229,7 @@ void MainLoop::Clean()
 
 }
 
-void MainLoop::Reset(int ShapeCount, bool Gravity)
+void MainLoop::Reset(int ShapeCount, int NewRelativeTemperature, bool Gravity)
 {
 
     PlotDist();
@@ -240,6 +244,7 @@ void MainLoop::Reset(int ShapeCount, bool Gravity)
     }
     CurrentShapeCount = 0;
     MaxShapeCount = ShapeCount;
+    RelativeTemperature = NewRelativeTemperature;
     if( Gravity ){
         GravityZ = 9.8;
     }
@@ -253,19 +258,40 @@ void MainLoop::PlotDist()
 {
 
     
-    const int NumberOfBars = 20;
+    // const int NumberOfBars = 20;
 
 
     std::vector<float> Velocities;
     Velocities.reserve(CurrentShapeCount);
+    int MaxV = 0;
 
     for( int i = 0; i < CurrentShapeCount; i++){
-        float Velocity = sqrt( (Shapes[i]->Velocity.first * Shapes[i]->Velocity.first) + (Shapes[i]->Velocity.second * Shapes[i]->Velocity.second));
+        float Velocity = SDL_sqrtf( (Shapes[i]->Velocity.first * Shapes[i]->Velocity.first) + (Shapes[i]->Velocity.second * Shapes[i]->Velocity.second));
+        std::cout << Velocity << std::endl;
+        MaxV = SDL_max(Velocity, MaxV);
         Velocities.push_back(Velocity);
     }
 
-    matplotlibcpp::hist(Velocities, NumberOfBars);
-    matplotlibcpp::xlim(0.f, 2500.f);
-    // matplotlibcpp::show();
+    std::vector<float> VTheoryX(10000);
+    std::vector<float> VTheoryY(10000);
+    std::iota(VTheoryX.begin(), VTheoryX.end(), 1); // fills with 1,2,3,...,10
+    // std::vector<int> VelocitiesTheoryX(2500);
+    for(int i = 0; i < VTheoryX.size(); i++){
+        VTheoryY[i] = 4 * SDL_PI_F * VTheoryX[i]*VTheoryX[i] * SDL_powf(MassConst / (2.f * SDL_PI_F * BoltzConst * RelativeTemperature) , 1.5f) * SDL_expf( -MassConst * VTheoryX[i] * VTheoryX[i] / (2*BoltzConst*RelativeTemperature) );
+        // VTheoryY[i] *= VTheoryY[i];
+        // std::cout << VTheoryY[i] << std::endl;
+    }
+
+
+
+    matplotlibcpp::figure();
+    matplotlibcpp::plot(VTheoryX, VTheoryY, "r");
+
+    // matplotlibcpp::plot()
+    matplotlibcpp::hist(Velocities, MaxV/10);
+
+    // matplotlibcpp::xlim(0.f, 10000.f);
+    // matplotlibcpp::ylim(0.f, 0.01f);
+
 
 }
