@@ -7,10 +7,10 @@
 #include <matplotlib-cpp-master/matplotlibcpp.h>
 
 
-float MainLoop::GravityZ = 9.8f;
+float MainLoop::GravityZ = 0.f;
 int MainLoop::WindowHeight = 0.f;
 int MainLoop::WindowWidth = 0.f;
-int MainLoop::RelativeTemperature = 1.f;
+int MainLoop::RelativeTemperature = 100.f;
 const float BoltzConst = 1.f;//.380649 * SDL_powf(10, -23);
 const float MassConst = 1.f;//.6735575 * SDL_powf(10, -27);
 const float ReferenceVelocity = 2.f;

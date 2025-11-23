@@ -16,7 +16,7 @@ void ControlsUI::Render(){
     // ImGui::SliderFloat("Number of molecules",&ShapeCount, 100.f, 5000.f);
     ImGui::SliderInt("Number of molecules",&ShapeCount, 100, 5000);
     ImGui::SliderInt("Relative Temperature",&RelativeTemperature, 1, 1000);
-    ImGui::Checkbox("Gravity", &Gravity);
+    ImGui::Checkbox("Gravity     For demonstration purposes only, boltzmann distribution no longer accurate", &Gravity);
     if( ImGui::Button("Save and Reset") && Loop){
         Loop->Reset(ShapeCount, RelativeTemperature, Gravity);
     }

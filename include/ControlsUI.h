@@ -9,7 +9,7 @@ public:
     MainLoop* Loop;
 
 private:
-    int ShapeCount;
+    int ShapeCount = 1000;
     bool Gravity;
-    int RelativeTemperature;
+    int RelativeTemperature = 100;
 };
