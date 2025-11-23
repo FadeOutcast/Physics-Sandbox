@@ -291,6 +291,11 @@ void MainLoop::PlotDist()
     // matplotlibcpp::plot()
     matplotlibcpp::hist(Velocities);//static_cast<float>(MaxV)/50.f);
 
+    matplotlibcpp::title("Theoretical vs Simulated Maxwell Boltzmann PDF");
+
+    matplotlibcpp::xlabel("Velocity");
+    matplotlibcpp::ylabel("Probability Density");
+
     // matplotlibcpp::xlim(0.f, 10000.f);
     // matplotlibcpp::ylim(0.f, 0.01f);
 
