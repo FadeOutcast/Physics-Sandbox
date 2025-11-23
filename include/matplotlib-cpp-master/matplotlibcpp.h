@@ -896,6 +896,7 @@ bool hist(const std::vector<Numeric>& y, long bins=10,std::string color="b",
     PyDict_SetItemString(kwargs, "color", PyString_FromString(color.c_str()));
     PyDict_SetItemString(kwargs, "alpha", PyFloat_FromDouble(alpha));
     PyDict_SetItemString(kwargs, "cumulative", cumulative ? Py_True : Py_False);
+    PyDict_SetItemString(kwargs, "density", Py_True);
 
     PyObject* plot_args = PyTuple_New(1);
 

@@ -8,11 +8,12 @@
 
 
 float MainLoop::GravityZ = 9.8f;
-int MainLoop::RelativeTemperature = 1;
 int MainLoop::WindowHeight = 0.f;
 int MainLoop::WindowWidth = 0.f;
-const float BoltzConst = 1.380649 * SDL_powf(10, -23);
-const float MassConst = 1.6735575 * SDL_powf(10, -27);
+int MainLoop::RelativeTemperature = 1.f;
+const float BoltzConst = 1.f;//.380649 * SDL_powf(10, -23);
+const float MassConst = 1.f;//.6735575 * SDL_powf(10, -27);
+const float ReferenceVelocity = 2.f;
 
 MainLoop::MainLoop()
 {
@@ -267,17 +268,17 @@ void MainLoop::PlotDist()
 
     for( int i = 0; i < CurrentShapeCount; i++){
         float Velocity = SDL_sqrtf( (Shapes[i]->Velocity.first * Shapes[i]->Velocity.first) + (Shapes[i]->Velocity.second * Shapes[i]->Velocity.second));
-        std::cout << Velocity << std::endl;
         MaxV = SDL_max(Velocity, MaxV);
         Velocities.push_back(Velocity);
     }
 
-    std::vector<float> VTheoryX(10000);
-    std::vector<float> VTheoryY(10000);
-    std::iota(VTheoryX.begin(), VTheoryX.end(), 1); // fills with 1,2,3,...,10
+    std::vector<float> VTheoryX(100);
+    std::vector<float> VTheoryY(100);
+    std::iota(VTheoryX.begin(), VTheoryX.end(), 1); // fills with 1,2,3,..
     // std::vector<int> VelocitiesTheoryX(2500);
     for(int i = 0; i < VTheoryX.size(); i++){
-        VTheoryY[i] = 4 * SDL_PI_F * VTheoryX[i]*VTheoryX[i] * SDL_powf(MassConst / (2.f * SDL_PI_F * BoltzConst * RelativeTemperature) , 1.5f) * SDL_expf( -MassConst * VTheoryX[i] * VTheoryX[i] / (2*BoltzConst*RelativeTemperature) );
+        // VTheoryY[i] = 4 * SDL_PI_F * VTheoryX[i]*VTheoryX[i] * SDL_powf(MassConst / (2.f * SDL_PI_F * BoltzConst * RelativeTemperature) , 1.5f) * SDL_expf( -MassConst * VTheoryX[i] * VTheoryX[i] / (2*BoltzConst*RelativeTemperature));
+        VTheoryY[i] = VTheoryX[i]* MassConst / (BoltzConst * RelativeTemperature) * SDL_expf( -MassConst * VTheoryX[i] * VTheoryX[i] / (2*BoltzConst*RelativeTemperature));
         // VTheoryY[i] *= VTheoryY[i];
         // std::cout << VTheoryY[i] << std::endl;
     }
@@ -288,7 +289,7 @@ void MainLoop::PlotDist()
     matplotlibcpp::plot(VTheoryX, VTheoryY, "r");
 
     // matplotlibcpp::plot()
-    matplotlibcpp::hist(Velocities, MaxV/10);
+    matplotlibcpp::hist(Velocities);//static_cast<float>(MaxV)/50.f);
 
     // matplotlibcpp::xlim(0.f, 10000.f);
     // matplotlibcpp::ylim(0.f, 0.01f);

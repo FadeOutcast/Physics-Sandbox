@@ -41,7 +41,6 @@ private:
     int MaxShapeCount = 1000;
 
     // Velocity at Temperature of 1
-    float ReferenceVelocity = 30.f;
     ControlsUI* Control;
     
 
