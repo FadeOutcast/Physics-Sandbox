@@ -9,17 +9,34 @@ Here is what the simulation looks like:
 
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/8dc0be9d-10d4-4d1d-8b7e-8b08386a4971" />
 
+<br/>
+
 **Video:**
+
+<br/>
 
 https://github.com/user-attachments/assets/0a97f3b9-b6cb-4fa1-928b-1b14d26536d3
 
+<br>
 
 **Examples of simulated velocities vs boltzmann distribution at different temperatures:**
 
+<br>
+
+As this was simulated in 2 Dimensions, the following formula was used to calcualte the theoretical distribution:
+
+$\\boxed{f(v) = \\frac{m}{kT} v \\exp\\left(-\\frac{m}{kT}\\frac{v^2}{2} \\right)}$
+
+<br>
+
 <img width="640" height="480" alt="100RT" src="https://github.com/user-attachments/assets/1940986d-6763-454f-abeb-26308236fa30" />
+<br>
 
 <img width="640" height="480" alt="850RT" src="https://github.com/user-attachments/assets/98e451e6-7192-454e-b476-9e920d479421" />
 
+<br>
+
+<br>
 
 
 **Features:**
